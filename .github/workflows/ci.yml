@@ -50,7 +50,7 @@ jobs:
   tfops:
     name: Terraform Ops
     needs: list-example-directories
-    runs-on: ubutnu-latest
+    runs-on: ubuntu-latest
     env:
       TF_CLOUD_HOSTNAME: app.terraform.io
       TF_CLOUD_ORGANIZATION: lplfinancial-platforms
