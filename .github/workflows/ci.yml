@@ -50,7 +50,7 @@ jobs:
   tfops:
     name: Terraform Ops
     needs: list-example-directories
-    runs-on: lpl-aws-clz-shared-k8s-gh-arc-platforms
+    runs-on: ubutnu-latest
     env:
       TF_CLOUD_HOSTNAME: app.terraform.io
       TF_CLOUD_ORGANIZATION: lplfinancial-platforms
@@ -74,7 +74,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        uses: LPL-InfrastructureOperations/terraform-integrations/github-actions/terraform-apply@v2
+        uses: dflook/terraform-apply
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
@@ -89,7 +89,7 @@ jobs:
       
       - name: Terraform Destroy
         id: destroy
-        uses: LPL-InfrastructureOperations/terraform-integrations/github-actions/terraform-destroy@v2
+        uses: dflook/terraform-destroy
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
