@@ -74,7 +74,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        uses: dflook/terraform-apply
+        uses: dflook/terraform-apply@v1
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
@@ -89,7 +89,7 @@ jobs:
       
       - name: Terraform Destroy
         id: destroy
-        uses: dflook/terraform-destroy
+        uses: dflook/terraform-destroy@v1
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
