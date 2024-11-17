@@ -1,36 +1,103 @@
-# This is a basic workflow to help you get started with Actions
+name: Terraform Module Emphemeral Test
+run-name: Terraform Module Emphemeral Test (${{ github.ref }})
 
-name: CI
-
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+# Criteria for Execution
+on: 
   workflow_dispatch:
+  
+  workflow_call:
+      
+# Required Permissions by GITHUB_TOKEN
+permissions: 
+  id-token: write
+  contents: read
+  pull-requests: write
+  actions: read
+  deployments: write
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Sequential Jobs for Execution
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  list-example-directories:
+    name: Fetch Test Build Configurations
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    outputs:
+        dirs: ${{ steps.list-example-directories.outputs.directories }}
+    env:
+      LOCAL_PATH: "examples"
+      TARGET_DIR: "${GITHUB_WORKSPACE}/${LOCAL_PATH}"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+        - name: List example-directories
+          id: list-example-directories
+          run: |                
+            # Initialize an empty list
+            directories=()
+            
+            # List the names of example-directories
+            for dir in "${{ env.TARGET_DIR }}"/*/; do
+                  # Remove the trailing slash and add the directory name to the list
+                directories+=("${{ env.LOCAL_PATH }}/$(basename "$dir")")
+            done
+            
+            directories_json=$(printf '%s\n' "${directories[@]}" | jq -R . | jq -s .)
+            echo "directories<<EOF" >> $GITHUB_OUTPUT
+            echo "$directories_json" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+  tfops:
+    name: Terraform Ops
+    needs: list-example-directories
+    runs-on: lpl-aws-clz-shared-k8s-gh-arc-platforms
+    env:
+      TF_CLOUD_HOSTNAME: app.terraform.io
+      TF_CLOUD_ORGANIZATION: lplfinancial-platforms
+      TF_API_TOKEN: ${{ secrets.TFC_TOKEN_LPLFINANCIAL_PLATFORMS_MODULE_TESTING }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix:
+        example: ${{ fromJSON(needs.list-example-directories.outputs.dirs) }}
+    steps:
+      - name: Checkout Configuration
+        uses: actions/checkout@v4
+
+      - name: Parse Workspace Name
+        id: parse_workspace
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          # Replace all non-alphanumeric characters with a hyphen
+          repo=$(echo "${{ github.repository }}" | sed "s/[^a-zA-Z0-9]/-/g")
+          configuration=$(echo "${{ matrix.example }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
+          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}"    
+
+      - name: Terraform Apply
+        id: apply
+        uses: LPL-InfrastructureOperations/terraform-integrations/github-actions/terraform-apply@v2
+        with:
+          project: "lzp-portfolio-platformauto-dev"
+          workspace: ${{ steps.parse_workspace.outputs.name }}
+          execution_mode: agent
+          working_directory: "${{ matrix.example }}"
+          environment_variables: |
+            {
+              "DEFAULT_AWS_REGION": "us-east-1",
+              "AWS_REGION": "us-east-1"
+            }
+          message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
+      
+      - name: Terraform Destroy
+        id: destroy
+        uses: LPL-InfrastructureOperations/terraform-integrations/github-actions/terraform-destroy@v2
+        with:
+          project: "lzp-portfolio-platformauto-dev"
+          workspace: ${{ steps.parse_workspace.outputs.name }}
+          execution_mode: agent
+          working_directory: "${{ matrix.example }}"
+          environment_variables: |
+            {
+              "DEFAULT_AWS_REGION": "us-east-1",
+              "AWS_REGION": "us-east-1"
+            }
+          message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
