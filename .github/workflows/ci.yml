@@ -76,28 +76,26 @@ jobs:
         id: apply
         uses: dflook/terraform-apply@v1
         with:
-          project: "default pr"
           workspace: ${{ steps.parse_workspace.outputs.name }}
-          execution_mode: agent
-          working_directory: "${{ matrix.example }}"
-          environment_variables: |
-            {
-              "DEFAULT_AWS_REGION": "East Us",
-              "AWS_REGION": "East Us"
-            }
-          message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
+          variables: |
+            working_directory = "${{ matrix.example }}"
+            workspace: ${{ steps.parse_workspace.outputs.name }}
+            availability_zone_names = [
+                "us-east-1a",
+                "us-west-1c",
+              ]
+          #message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
       
       - name: Terraform Destroy
         id: destroy
         uses: dflook/terraform-destroy@v1
         with:
-          project: "my-project"
           workspace: ${{ steps.parse_workspace.outputs.name }}
-          execution_mode: agent
-          working_directory: "${{ matrix.example }}"
-          environment_variables: |
-            {
-              "DEFAULT_AWS_REGION": "us-east-1",
-              "AWS_REGION": "us-east-1"
-            }
-          message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
+          variables: |
+            working_directory = "${{ matrix.example }}"
+            workspace: ${{ steps.parse_workspace.outputs.name }}
+            availability_zone_names = [
+                "us-east-1a",
+                "us-west-1c",
+              ]
+          #message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
