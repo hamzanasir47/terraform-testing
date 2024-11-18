@@ -23,7 +23,7 @@ jobs:
     outputs:
         dirs: ${{ steps.list-example-directories.outputs.directories }}
     env:
-      LOCAL_PATH: "examples"
+      LOCAL_PATH: "examples/complete"
       TARGET_DIR: "${GITHUB_WORKSPACE}/${LOCAL_PATH}"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
