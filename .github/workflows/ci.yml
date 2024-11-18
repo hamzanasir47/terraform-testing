@@ -76,10 +76,9 @@ jobs:
         id: apply
         uses: dflook/terraform-apply@v1
         with:
-          workspace: ${{ steps.parse_workspace.outputs.name }}
+          workspace: ${{ steps.parse_workspace.outputs.name }} -or-create
           variables: |
             working_directory = "${{ matrix.example }}"
-            workspace: ${{ steps.parse_workspace.outputs.name }}
             availability_zone_names = [
                 "us-east-1a",
                 "us-west-1c",
@@ -90,10 +89,9 @@ jobs:
         id: destroy
         uses: dflook/terraform-destroy@v1
         with:
-          workspace: ${{ steps.parse_workspace.outputs.name }}
+          workspace: ${{ steps.parse_workspace.outputs.name }} -or-create
           variables: |
             working_directory = "${{ matrix.example }}"
-            workspace: ${{ steps.parse_workspace.outputs.name }}
             availability_zone_names = [
                 "us-east-1a",
                 "us-west-1c",
