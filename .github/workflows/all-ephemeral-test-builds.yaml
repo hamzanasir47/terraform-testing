@@ -63,5 +63,5 @@ jobs:
           
     uses: ./.github/workflows/ephemeral-test-build-apply.yaml
     with:
-        configuration: ${{ matrix.configurations }}
+        configurations: ${{ matrix.configurations }}
     secrets: inherit
