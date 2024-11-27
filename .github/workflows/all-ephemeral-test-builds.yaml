@@ -59,7 +59,7 @@ jobs:
           # - 'LPL-Platforms/terraform-aws-service-sqs'
           # - 'LPL-Platforms/terraform-aws-service-stepfunctions'
           # - 'LPL-Platforms/terraform-aws-service-ssm-parameter'
-          - 'hamzanasir47/examples'
+          - 'hamzanasir47/terraform-module/'
           
     uses: ./.github/workflows/ephemeral-test-build-apply.yaml
     with:
