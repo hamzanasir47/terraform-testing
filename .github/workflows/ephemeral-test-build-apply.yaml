@@ -91,6 +91,11 @@ jobs:
 
       - name: Terraform Apply
         id: apply
+        env:
+          TF_CLOUD_HOSTNAME: app.terraform.io
+          TF_CLOUD_ORGANIZATION: first-organization47
+          TF_API_TOKEN: ${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: dflook/terraform-apply@v1
         with:
           project: "lzp-portfolio-platformauto-dev"
