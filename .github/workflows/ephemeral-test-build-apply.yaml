@@ -78,7 +78,7 @@ jobs:
         with:
           repository: ${{ inputs.configuration }}
           #ref: feature/neldreth/single-module-testing-pipeline
-          #token: ${{ secrets.READ_PLATFORM_MODS_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Parse Workspace Name
         id: parse_workspace
