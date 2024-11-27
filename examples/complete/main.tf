@@ -27,7 +27,7 @@ resource "azurerm_network_security_group" "main" {
   tags                 = var.tags
 }
 
-resource "azurerm_subnet_network_security_group_associatio" "main" {
+resource "azurerm_subnet_network_security_group_association" "main" {
   count                = length(var.subnets)
   subnet_id            = azurerm_subnet.main[count.index].id
   network_security_group_id = azurerm_network_security_group.main[count.index].id
