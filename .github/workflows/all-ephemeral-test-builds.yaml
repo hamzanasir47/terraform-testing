@@ -1,0 +1,65 @@
+name: Dispatch All Terraform Module Emphemeral Test Builds
+run-name: Dispatch All Terraform Module Emphemeral Test Builds (${{ github.ref }})
+
+# Criteria for Execution
+on: 
+  workflow_dispatch:
+
+  push:
+    branches:  
+     - feature/ola-test
+
+# Required Permissions by GITHUB_TOKEN
+permissions: 
+  id-token: write
+  contents: read
+  pull-requests: write
+  actions: read
+  deployments: write
+
+# Sequential Jobs for Execution
+jobs:
+  dispatch-apply:
+    name: Matrix Terraform Apply
+    strategy:
+      fail-fast: false
+      matrix:
+        configurations: 
+          # - 'LPL-Platforms/terraform-aws-service-apigateway'
+          # - 'LPL-Platforms/terraform-aws-service-athena'
+          # - 'LPL-Platforms/terraform-aws-service-cloudfront-distribution'
+          # - 'LPL-Platforms/terraform-aws-service-cloudwatch-metric-alarm'
+          # - 'LPL-Platforms/terraform-aws-service-cloudwatch-log-query'
+          # - 'LPL-Platforms/terraform-aws-service-dynamodb'
+          # - 'LPL-Platforms/terraform-aws-service-ec2-instance'
+          # - 'LPL-Platforms/terraform-aws-service-efs'
+          # - 'LPL-Platforms/terraform-aws-service-eks'
+          # - 'LPL-Platforms/terraform-aws-service-eventbridge-rule'
+          # - 'LPL-Platforms/terraform-aws-service-glue-connection'
+          # - 'LPL-Platforms/terraform-aws-service-glue-job'
+          # - 'LPL-Platforms/terraform-aws-service-glue-catalog-database'
+          # - 'LPL-Platforms/terraform-aws-service-glue-crawler'
+          # - 'LPL-Platforms/terraform-aws-service-glue-workflow'
+          # - 'LPL-Platforms/terraform-aws-service-glue-trigger'
+          - 'LPL-Platforms/terraform-aws-service-iam-role'
+          - 'LPL-Platforms/terraform-aws-service-iam-user'
+          - 'LPL-Platforms/terraform-aws-service-iam-policy'
+          - 'LPL-Platforms/terraform-aws-service-kinesis-data-stream'
+          - 'LPL-Platforms/terraform-aws-service-kms'
+          - 'LPL-Platforms/terraform-aws-service-lambda-function'
+          - 'LPL-Platforms/terraform-aws-service-lambda-layer'
+          - 'LPL-Platforms/terraform-aws-service-mwaa'
+          - 'LPL-Platforms/terraform-aws-service-route53-healthcheck'
+          - 'LPL-Platforms/terraform-aws-service-route53-record'
+          - 'LPL-Platforms/terraform-aws-service-s3-bucket'
+          - 'LPL-Platforms/terraform-aws-service-s3-object'
+          - 'LPL-Platforms/terraform-aws-service-secretsmanager'
+          - 'LPL-Platforms/terraform-aws-service-securitygroup'
+          - 'LPL-Platforms/terraform-aws-service-sns'
+          - 'LPL-Platforms/terraform-aws-service-sqs'
+          - 'LPL-Platforms/terraform-aws-service-stepfunctions'
+          - 'LPL-Platforms/terraform-aws-service-ssm-parameter'
+    uses: ./.github/workflows/ephemeral-test-build-apply.yaml
+    with:
+        configuration: ${{ matrix.configurations }}
+    secrets: inherit
