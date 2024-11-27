@@ -7,7 +7,7 @@ on:
 
   push:
     branches:  
-     - feature/ola-test
+     - main
 
 # Required Permissions by GITHUB_TOKEN
 permissions: 
@@ -41,24 +41,26 @@ jobs:
           # - 'LPL-Platforms/terraform-aws-service-glue-crawler'
           # - 'LPL-Platforms/terraform-aws-service-glue-workflow'
           # - 'LPL-Platforms/terraform-aws-service-glue-trigger'
-          - 'LPL-Platforms/terraform-aws-service-iam-role'
-          - 'LPL-Platforms/terraform-aws-service-iam-user'
-          - 'LPL-Platforms/terraform-aws-service-iam-policy'
-          - 'LPL-Platforms/terraform-aws-service-kinesis-data-stream'
-          - 'LPL-Platforms/terraform-aws-service-kms'
-          - 'LPL-Platforms/terraform-aws-service-lambda-function'
-          - 'LPL-Platforms/terraform-aws-service-lambda-layer'
-          - 'LPL-Platforms/terraform-aws-service-mwaa'
-          - 'LPL-Platforms/terraform-aws-service-route53-healthcheck'
-          - 'LPL-Platforms/terraform-aws-service-route53-record'
-          - 'LPL-Platforms/terraform-aws-service-s3-bucket'
-          - 'LPL-Platforms/terraform-aws-service-s3-object'
-          - 'LPL-Platforms/terraform-aws-service-secretsmanager'
-          - 'LPL-Platforms/terraform-aws-service-securitygroup'
-          - 'LPL-Platforms/terraform-aws-service-sns'
-          - 'LPL-Platforms/terraform-aws-service-sqs'
-          - 'LPL-Platforms/terraform-aws-service-stepfunctions'
-          - 'LPL-Platforms/terraform-aws-service-ssm-parameter'
+          # - 'LPL-Platforms/terraform-aws-service-iam-role'
+          # - 'LPL-Platforms/terraform-aws-service-iam-user'
+          # - 'LPL-Platforms/terraform-aws-service-iam-policy'
+          # - 'LPL-Platforms/terraform-aws-service-kinesis-data-stream'
+          # - 'LPL-Platforms/terraform-aws-service-kms'
+          # - 'LPL-Platforms/terraform-aws-service-lambda-function'
+          # - 'LPL-Platforms/terraform-aws-service-lambda-layer'
+          # - 'LPL-Platforms/terraform-aws-service-mwaa'
+          # - 'LPL-Platforms/terraform-aws-service-route53-healthcheck'
+          # - 'LPL-Platforms/terraform-aws-service-route53-record'
+          # - 'LPL-Platforms/terraform-aws-service-s3-bucket'
+          # - 'LPL-Platforms/terraform-aws-service-s3-object'
+          # - 'LPL-Platforms/terraform-aws-service-secretsmanager'
+          # - 'LPL-Platforms/terraform-aws-service-securitygroup'
+          # - 'LPL-Platforms/terraform-aws-service-sns'
+          # - 'LPL-Platforms/terraform-aws-service-sqs'
+          # - 'LPL-Platforms/terraform-aws-service-stepfunctions'
+          # - 'LPL-Platforms/terraform-aws-service-ssm-parameter'
+          - 'terraform-testing/terraform-azure-vnet'
+          
     uses: ./.github/workflows/ephemeral-test-build-apply.yaml
     with:
         configuration: ${{ matrix.configurations }}
