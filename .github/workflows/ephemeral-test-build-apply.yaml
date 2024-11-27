@@ -95,7 +95,7 @@ jobs:
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
-          execution_mode: agent
+          #execution_mode: agent
           working_directory: "${{ matrix.example }}"
           environment_variables: |
             {
