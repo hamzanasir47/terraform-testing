@@ -39,7 +39,7 @@ jobs:
           uses: actions/checkout@v4
           with:
             repository: ${{ inputs.configuration }}
-            #ref: feature/neldreth/single-module-testing-pipeline
+            ref: main
             token: ${{ secrets.GITHUB_TOKEN }}
 
         - name: List example-directories
@@ -77,7 +77,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ inputs.configuration }}
-          #ref: feature/neldreth/single-module-testing-pipeline
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Parse Workspace Name
