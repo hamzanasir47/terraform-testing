@@ -92,17 +92,17 @@ jobs:
       - name: Terraform Apply
         id: apply
         uses: dflook/terraform-apply@v1
+        env:
+          TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
-          env:
-            TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           #execution_mode: agent
           working_directory: "${{ matrix.example }}"
           environment_variables: |
             {
-              "DEFAULT_AWS_REGION": "us-east-1",
-              "AWS_REGION": "us-east-1"
+              "DEFAULT_AZURE_REGION": "East US",
+              "AZURE_REGION": "East US"
             }
           message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
       
