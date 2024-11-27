@@ -1,11 +1,20 @@
 name: Terraform Module Emphemeral Test
-run-name: Terraform Module Emphemeral Test (${{ github.ref }})
+run-name: Terraform Module Emphemeral Test (${{ inputs.configuration }})
 
 # Criteria for Execution
 on: 
   workflow_dispatch:
+    inputs:
+        configuration:
+            description: 'Path to the Terraform Configuration'
+            required: true
   
   workflow_call:
+    inputs:
+        configuration:
+            type: string
+            description: 'Path to the Terraform Configuration'
+            required: true
       
 # Required Permissions by GITHUB_TOKEN
 permissions: 
@@ -23,12 +32,15 @@ jobs:
     outputs:
         dirs: ${{ steps.list-example-directories.outputs.directories }}
     env:
-      LOCAL_PATH: "examples/complete"
+      LOCAL_PATH: "examples"
       TARGET_DIR: "${GITHUB_WORKSPACE}/${LOCAL_PATH}"
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
         - name: Checkout repository
           uses: actions/checkout@v4
+          with:
+            repository: ${{ inputs.configuration }}
+            ref: feature/neldreth/single-module-testing-pipeline
+            token: ${{ secrets.READ_PLATFORM_MODS_GITHUB_TOKEN }}
 
         - name: List example-directories
           id: list-example-directories
@@ -50,7 +62,7 @@ jobs:
   tfops:
     name: Terraform Ops
     needs: list-example-directories
-    runs-on: ubuntu-latest
+    runs-on: lpl-aws-clz-shared-k8s-gh-arc-platforms
     env:
       TF_CLOUD_HOSTNAME: app.terraform.io
       TF_CLOUD_ORGANIZATION: first-organization47
@@ -63,37 +75,46 @@ jobs:
     steps:
       - name: Checkout Configuration
         uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.configuration }}
+          #ref: feature/neldreth/single-module-testing-pipeline
+          #token: ${{ secrets.READ_PLATFORM_MODS_GITHUB_TOKEN }}
 
       - name: Parse Workspace Name
         id: parse_workspace
         run: |
           # Replace all non-alphanumeric characters with a hyphen
           repo=$(echo "${{ github.repository }}" | sed "s/[^a-zA-Z0-9]/-/g")
-          configuration=$(echo "${{ matrix.example }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
-          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}"    
+          configuration=$(echo "${{ inputs.configuration }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
+          nested_configuration=$(echo "${{ matrix.example }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
+          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}-${nested_configuration}"    
 
       - name: Terraform Apply
         id: apply
         uses: dflook/terraform-apply@v1
         with:
-          workspace: ${{ steps.parse_workspace.outputs.name }} -or-create
-          variables: |
-            working_directory = "${{ matrix.example }}"
-            availability_zone_names = [
-                "us-east-1a",
-                "us-west-1c",
-              ]
-          #message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
+          project: "lzp-portfolio-platformauto-dev"
+          workspace: ${{ steps.parse_workspace.outputs.name }}
+          execution_mode: agent
+          working_directory: "${{ matrix.example }}"
+          environment_variables: |
+            {
+              "DEFAULT_AWS_REGION": "us-east-1",
+              "AWS_REGION": "us-east-1"
+            }
+          message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
       
       - name: Terraform Destroy
         id: destroy
         uses: dflook/terraform-destroy@v1
         with:
-          workspace: ${{ steps.parse_workspace.outputs.name }} -or-create
-          variables: |
-            working_directory = "${{ matrix.example }}"
-            availability_zone_names = [
-                "us-east-1a",
-                "us-west-1c",
-              ]
-          #message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
+          project: "lzp-portfolio-platformauto-dev"
+          workspace: ${{ steps.parse_workspace.outputs.name }}
+          #execution_mode: agent
+          working_directory: "${{ matrix.example }}"
+          environment_variables: |
+            {
+              "DEFAULT_AZURE_REGION": "East Us",
+              "AZURE_REGION": "East Us"
+            }
+          message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
