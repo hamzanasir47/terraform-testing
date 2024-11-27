@@ -62,7 +62,7 @@ jobs:
   tfops:
     name: Terraform Ops
     needs: list-example-directories
-    runs-on: lpl-aws-clz-shared-k8s-gh-arc-platforms
+    runs-on: ubuntu-latest
     env:
       TF_CLOUD_HOSTNAME: app.terraform.io
       TF_CLOUD_ORGANIZATION: first-organization47
