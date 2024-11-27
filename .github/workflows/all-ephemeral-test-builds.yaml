@@ -59,7 +59,7 @@ jobs:
           # - 'LPL-Platforms/terraform-aws-service-sqs'
           # - 'LPL-Platforms/terraform-aws-service-stepfunctions'
           # - 'LPL-Platforms/terraform-aws-service-ssm-parameter'
-          - 'hamzanasir47/terraform-testing/terraform-azure-vnet'
+          - 'hamzanasir47/examples'
           
     uses: ./.github/workflows/ephemeral-test-build-apply.yaml
     with:
