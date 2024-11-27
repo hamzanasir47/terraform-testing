@@ -2,22 +2,22 @@ name: Terraform Module Emphemeral Test
 run-name: Terraform Module Emphemeral Test (${{ inputs.configuration }})
 
 # Criteria for Execution
-on: 
+on:
   workflow_dispatch:
     inputs:
-        configuration:
-            description: 'Path to the Terraform Configuration'
-            required: true
-  
+      configuration:
+        description: "Path to the Terraform Configuration"
+        required: true
+
   workflow_call:
     inputs:
-        configuration:
-            type: string
-            description: 'Path to the Terraform Configuration'
-            required: true
-      
+      configuration:
+        type: string
+        description: "Path to the Terraform Configuration"
+        required: true
+
 # Required Permissions by GITHUB_TOKEN
-permissions: 
+permissions:
   id-token: write
   contents: read
   pull-requests: write
@@ -30,34 +30,34 @@ jobs:
     name: Fetch Test Build Configurations
     runs-on: ubuntu-latest
     outputs:
-        dirs: ${{ steps.list-example-directories.outputs.directories }}
+      dirs: ${{ steps.list-example-directories.outputs.directories }}
     env:
       LOCAL_PATH: "examples"
       TARGET_DIR: "${GITHUB_WORKSPACE}/${LOCAL_PATH}"
     steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-          with:
-            repository: ${{ inputs.configuration }}
-            ref: main
-            token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.configuration }}
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: List example-directories
-          id: list-example-directories
-          run: |                
-            # Initialize an empty list
-            directories=()
-            
-            # List the names of example-directories
-            for dir in "${{ env.TARGET_DIR }}"/*/; do
-                  # Remove the trailing slash and add the directory name to the list
-                directories+=("${{ env.LOCAL_PATH }}/$(basename "$dir")")
-            done
-            
-            directories_json=$(printf '%s\n' "${directories[@]}" | jq -R . | jq -s .)
-            echo "directories<<EOF" >> $GITHUB_OUTPUT
-            echo "$directories_json" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+      - name: List example-directories
+        id: list-example-directories
+        run: |
+          # Initialize an empty list
+          directories=()
+
+          # List the names of example-directories
+          for dir in "${{ env.TARGET_DIR }}"/*/; do
+                # Remove the trailing slash and add the directory name to the list
+              directories+=("${{ env.LOCAL_PATH }}/$(basename "$dir")")
+          done
+
+          directories_json=$(printf '%s\n' "${directories[@]}" | jq -R . | jq -s .)
+          echo "directories<<EOF" >> $GITHUB_OUTPUT
+          echo "$directories_json" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
   tfops:
     name: Terraform Ops
@@ -87,7 +87,7 @@ jobs:
           repo=$(echo "${{ github.repository }}" | sed "s/[^a-zA-Z0-9]/-/g")
           configuration=$(echo "${{ inputs.configuration }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
           nested_configuration=$(echo "${{ matrix.example }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
-          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}-${nested_configuration}"    
+          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}-${nested_configuration}"
 
       - name: Terraform Apply
         id: apply
@@ -97,6 +97,7 @@ jobs:
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
+          auto_approve: true
           #execution_mode: agent
           working_directory: "${{ matrix.example }}"
           environment_variables: |
@@ -105,13 +106,14 @@ jobs:
               "AZURE_REGION": "East US"
             }
           message: "Triggered by: [Actor: ${{ github.actor }}; Ref: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}]"
-      
+
       - name: Terraform Destroy
         id: destroy
         uses: dflook/terraform-destroy@v1
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
+          auto_approve: true
           #execution_mode: agent
           working_directory: "${{ matrix.example }}"
           environment_variables: |
