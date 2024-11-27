@@ -110,6 +110,8 @@ jobs:
       - name: Terraform Destroy
         id: destroy
         uses: dflook/terraform-destroy@v1
+        env:
+          TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
