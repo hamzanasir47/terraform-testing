@@ -5,9 +5,9 @@ name: Checking for AWS-Provider-Updated Version
 on:
   workflow_dispatch:
 
-  #push:
-  #branches:
-  #- main
+  push:
+    branches:
+      - new
 
 # Required Permissions by GITHUB_TOKEN
 permissions:
