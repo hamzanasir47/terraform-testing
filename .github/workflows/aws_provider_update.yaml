@@ -35,7 +35,7 @@ jobs:
       - name: Get Current Azure Provider Version
         id: get_current_version
         run: |
-          CURRENT_VERSION=$(grep -oP '(?<=azurerm = )".*?"' examples/complete/provider.tf | tr -d '"')
+          CURRENT_VERSION=$(grep -oP '(?<=version = )".*?"' examples/complete/provider.tf | tr -d '"')
           echo "Current Azure Provider Version: $CURRENT_VERSION"
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
 
