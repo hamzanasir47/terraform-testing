@@ -1,0 +1,55 @@
+name: Checking for AWS-Provider-Updated Version
+#run-name: Dispatch All Terraform Module Emphemeral Test Builds (${{ github.ref }})
+
+# Criteria for Execution
+on:
+  workflow_dispatch:
+
+  #push:
+  #branches:
+  #- main
+
+# Required Permissions by GITHUB_TOKEN
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  actions: read
+  deployments: write
+
+jobs:
+  check-aws-provider:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Latest AWS Provider Version
+        id: get_latest_version
+        run: |
+          LATEST_VERSION=$(curl -s https://registry.terraform.io/v1/providers/hashicorp/aws | jq -r '.version')
+          echo "Latest AWS Provider Version: $LATEST_VERSION"
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+
+      - name: Get Current AWS Provider Version
+        id: get_current_version
+        run: |
+          CURRENT_VERSION=$(grep -oP '(?<=aws = )".*?"' versions.tf | tr -d '"')
+          echo "Current AWS Provider Version: $CURRENT_VERSION"
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+
+      - name: Compare Versions
+        id: compare_versions
+        run: |
+          if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+            echo "New AWS provider version available: $LATEST_VERSION"
+            echo "update_required=true" >> $GITHUB_ENV
+          else
+            echo "AWS provider version is up-to-date"
+            echo "update_required=false" >> $GITHUB_ENV
+          fi
+
+      - name: Print Comparison Result
+        run: |
+          echo "Update Required: ${{ env.update_required }}"
