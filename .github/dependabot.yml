@@ -1,0 +1,18 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "terraform" # Specify Terraform as the ecosystem
+    directory: "/examples/complete/provider.tf"                # Root directory containing your `provider.tf` file
+    schedule:
+      interval: "daily"           # Check for updates daily (can also be "weekly" or "monthly")
+    open-pull-requests-limit: 5   # Limit the number of open PRs from Dependabot
+    ignore:
+      - dependency-name: "azurerm"   # Example: Ignore specific providers
+        versions: ["<3.0.0"]         # Example: Ignore versions lower than 3.0.0
+    labels:
+      - "terraform"
+      - "dependencies"
