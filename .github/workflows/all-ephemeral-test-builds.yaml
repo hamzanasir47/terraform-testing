@@ -8,6 +8,7 @@ on:
   repository_dispatch:
     types:
       - dependabot-update
+      - dependabot-update-1
   push:
     branches:  
      - main
