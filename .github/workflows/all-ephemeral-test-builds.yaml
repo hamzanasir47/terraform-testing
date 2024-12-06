@@ -7,8 +7,7 @@ on:
 
   repository_dispatch:
     types:
-      - dependabot-update
-      - dependabot-update-1
+      - dependabot-update-2
   # push:
   #   branches:  
   #    - main
