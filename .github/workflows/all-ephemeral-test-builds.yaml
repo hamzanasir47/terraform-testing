@@ -5,9 +5,13 @@ run-name: Dispatch All Terraform Module Emphemeral Test Builds (${{ github.ref }
 on: 
   workflow_dispatch:
 
-  push:
-    branches:  
-     - main
+  repository_dispatch:
+    types:
+      - dependabot-update
+      - dependabot-update-1
+  # push:
+  #   branches:  
+  #    - main
 
 # Required Permissions by GITHUB_TOKEN
 permissions: 
