@@ -9,9 +9,9 @@ on:
     types:
       - dependabot-update
       - dependabot-update-1
-  push:
-    branches:  
-     - main
+  # push:
+  #   branches:  
+  #    - main
 
 # Required Permissions by GITHUB_TOKEN
 permissions: 
