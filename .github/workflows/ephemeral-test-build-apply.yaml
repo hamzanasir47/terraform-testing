@@ -94,6 +94,8 @@ jobs:
         uses: hamzanasir47/terraform-apply@main
         env:
           TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+        run: |
+          apply
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
@@ -112,6 +114,8 @@ jobs:
         uses: hamzanasir47/terraform-destroy@main
         env:
           TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+        run: |
+          destroy
         with:
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
