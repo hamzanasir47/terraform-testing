@@ -95,8 +95,7 @@ jobs:
         env:
           TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
-          args: apply
-          args: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+          args: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }} , apply
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           auto_approve: true
@@ -115,8 +114,7 @@ jobs:
         env:
           TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
-          args: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
-          args: destroy
+          args: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }} , destroy
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           auto_approve: true
