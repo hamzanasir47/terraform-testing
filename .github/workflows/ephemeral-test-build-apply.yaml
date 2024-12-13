@@ -91,10 +91,11 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        uses: hamzanasir47/terraform-apply@main apply
+        uses: hamzanasir47/terraform-apply@main
         env:
           TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
+          destroy: true
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           auto_approve: true
@@ -109,10 +110,11 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        uses: hamzanasir47/terraform-destroy@main destroy
+        uses: hamzanasir47/terraform-destroy@main
         env:
           TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
+          destroy: true
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           auto_approve: true
