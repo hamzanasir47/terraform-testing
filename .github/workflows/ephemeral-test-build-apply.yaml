@@ -93,7 +93,7 @@ jobs:
         id: apply
         uses: hamzanasir47/terraform-apply@main
         env:
-          TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+          MY_TFCLOUD_TOKEN_LATEST: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
           backend_config: token=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
           args: apply
@@ -113,7 +113,7 @@ jobs:
         id: destroy
         uses: hamzanasir47/terraform-destroy@main
         env:
-          TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+          MY_TFCLOUD_TOKEN_LATEST: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
           backend_config: token=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
           args: destroy
