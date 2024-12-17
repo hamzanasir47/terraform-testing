@@ -93,9 +93,8 @@ jobs:
         id: apply
         uses: hamzanasir47/terraform-apply@main
         env:
-          GITHUB_TOKEN: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+          TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
-          backend_config: token=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           auto_approve: true
@@ -112,9 +111,8 @@ jobs:
         id: destroy
         uses: hamzanasir47/terraform-destroy@main
         env:
-          GITHUB_TOKEN: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
+          TERRAFORM_CLOUD_TOKENS: app.terraform.io=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
         with:
-          backend_config: token=${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
           project: "lzp-portfolio-platformauto-dev"
           workspace: ${{ steps.parse_workspace.outputs.name }}
           auto_approve: true
