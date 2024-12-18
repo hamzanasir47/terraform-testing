@@ -20,5 +20,5 @@ def delete_s3_bucket(bucket_name):
         print(f"Error deleting bucket {bucket_name}: {e}")
 
 if __name__ == "__main__":
-    bucket_name = input("my-test-bucket-47")
+    bucket_name = ("my-test-bucket-47")
     delete_s3_bucket(bucket_name)
