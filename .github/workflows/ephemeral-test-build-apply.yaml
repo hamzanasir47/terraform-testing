@@ -42,22 +42,6 @@ jobs:
           ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List example-directories
-        id: list-example-directories
-        run: |
-          # Initialize an empty list
-          directories=()
-
-          # List the names of example-directories
-          for dir in "${{ env.TARGET_DIR }}"/*/; do
-                # Remove the trailing slash and add the directory name to the list
-              directories+=("${{ env.LOCAL_PATH }}/$(basename "$dir")")
-          done
-
-          directories_json=$(printf '%s\n' "${directories[@]}" | jq -R . | jq -s .)
-          echo "directories<<EOF" >> $GITHUB_OUTPUT
-          echo "$directories_json" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
   tfops:
     name: Terraform Ops
@@ -68,10 +52,7 @@ jobs:
       TF_CLOUD_ORGANIZATION: first-organization47
       TF_API_TOKEN: ${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    strategy:
-      fail-fast: false
-      matrix:
-        example: ${{ fromJSON(needs.list-example-directories.outputs.dirs) }}
+
     steps:
       - name: Checkout Configuration
         uses: actions/checkout@v4
@@ -86,8 +67,7 @@ jobs:
           # Replace all non-alphanumeric characters with a hyphen
           repo=$(echo "${{ github.repository }}" | sed "s/[^a-zA-Z0-9]/-/g")
           configuration=$(echo "${{ inputs.configuration }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
-          nested_configuration=$(echo "${{ matrix.example }}" | sed "s/[^a-zA-Z0-9]/-/g" | tr '[:upper:]' '[:lower:]')
-          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}-${nested_configuration}"
+          echo "::set-output name=name::$(echo $repo | tr '[:upper:]' '[:lower:]')-${configuration}"
 
       - name: Terraform Apply
         id: apply
