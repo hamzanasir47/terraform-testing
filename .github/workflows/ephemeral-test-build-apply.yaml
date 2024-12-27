@@ -39,7 +39,7 @@ jobs:
         with:
           repository: ${{ inputs.configuration }}
           ref: main
-          token: ${{ secrets.MY_SECRET }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
 
   tfops:
