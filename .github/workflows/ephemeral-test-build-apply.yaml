@@ -40,7 +40,7 @@ jobs:
         with:
           repository: ${{ inputs.configuration }}
           ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_SECRET }}
 
       - name: List example-directories
         id: list-example-directories
@@ -67,7 +67,7 @@ jobs:
       TF_CLOUD_HOSTNAME: app.terraform.io
       TF_CLOUD_ORGANIZATION: first-organization47
       TF_API_TOKEN: ${{ secrets.MY_TFCLOUD_TOKEN_LATEST }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.MY_SECRET }}
     strategy:
       fail-fast: false
       matrix:
@@ -78,7 +78,7 @@ jobs:
         with:
           repository: ${{ inputs.configuration }}
           ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_SECRET }}
 
       - name: Parse Workspace Name
         id: parse_workspace
